@@ -47,14 +47,4 @@ Examples:
 >`0,10,PadL[@PadL(text,10,0)@]
 >`0,11,Repeat[@Repeat(a,10)@]
 >`0,12,Trim[@Trim(000text00,"0")@]
-
-
-!update=()=>{
-	let p=getPosition(),
-	e=getEnemy(0)?.position;
-	if(e){
-		_v=[e.x-p.x,e.y-p.y];
-		_h=true;
-	}
-}
 */
