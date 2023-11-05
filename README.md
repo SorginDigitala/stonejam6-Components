@@ -30,3 +30,11 @@ arrayExt.Pop(arr)
 arrayExt.Shift(arr)
 
 arrayExt.Unshift(arr,value)
+
+## Storage extension
+var storageExt=import Components/Storage
+
+storageExt.GetArray("key",[array])  // get saved data from local storage, as array
+
+storageExt.SetArray("key",[array])  // save array in local storage
+
