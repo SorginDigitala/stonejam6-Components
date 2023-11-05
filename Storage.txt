@@ -1,0 +1,10 @@
+var json=import Components/JSON
+
+func GetArray(key,val)
+ var x=storage.Get(key,false)
+ ?x
+  return json.Parse(x)
+ return val
+
+func SetArray(key,val)
+ storage.Set(key,json.Stringify(val))

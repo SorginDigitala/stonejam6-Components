@@ -1,0 +1,60 @@
+
+func Pad(input,len,str)
+ ?string.Size(input)>=len
+  return input
+ return PadR(PadL(input,len-(len-string.Size(input))/2,str),len,str)
+
+
+func PadR(input,len,str)
+ ?string.Size(input)>=len
+  return input
+ return input + Repeat(str,len - string.Size(input))
+
+
+func PadL(input,len,str)
+ ?string.Size(input)>=len
+  return input
+ return Repeat(str,len - string.Size(input)) + input
+
+
+func Repeat(input,len)
+ ?len<2
+  return input
+ var t
+ t=input
+ for i=0..len-2
+  t=t+input
+ return t
+
+
+func TrimL(input,char)
+ var i=0
+ for x:string.Split(input)
+  ?x!char
+   break
+  i++
+ return string.Sub(input,i)
+ var t
+ 
+
+/*
+func Trim(input,char)
+ var t
+
+Examples:
+>`0,8,Pad[@Pad(text,10,0)@]
+>`0,9,PadR[@PadR(text,10,0)@]
+>`0,10,PadL[@PadL(text,10,0)@]
+>`0,11,Repeat[@Repeat(a,10)@]
+>`0,12,Trim[@Trim(000text00,"0")@]
+
+
+!update=()=>{
+	let p=getPosition(),
+	e=getEnemy(0)?.position;
+	if(e){
+		_v=[e.x-p.x,e.y-p.y];
+		_h=true;
+	}
+}
+*/

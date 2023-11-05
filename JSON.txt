@@ -1,0 +1,142 @@
+/*
+Title:   (string)JSON Parser
+Version: (float)1.0
+Authors: (array)[Mario300893]
+
+Description:
+A simple json.Stringify(string) and json.Parse(arr).
+Converts strings into data and arrays into strings.
+
+Usage:
+import Components/JSON_test
+________________________________________________________________
+
+var json=import Components/JSON
+
+var line=0
+func Print(t)
+ line++
+ >`0,@line@,@t@
+
+?loc.begin
+ var test=[true,"",1,3.1,t,[],[true],[te,xt],[-1],[0,0],[text,[1,2],[[[]]],[1]]]
+ Print(json.Stringify(test))
+ var x
+ var x2
+ var x3
+ for v:test
+  x=json.Stringify(v)
+  x2=json.Parse(x)
+  x3=json.Stringify(x2)
+  Print(v+":"+x+" -> ("+Type(x2)+")"+x2+" -> "+x3)
+ loc.Pause()
+________________________________________________________________
+
+
+TO-DO:
+ - All ok
+
+Log:
+ - v1.0 Initial release
+
+*/
+
+var arrayExt=import Components/Array
+
+
+//		STRINGIFY
+
+func Stringify(x)
+ ?Type(x)=array
+  return Array2String(x)
+ :?Type(x)=string
+  return "\""+x+"\""
+ :?Type(x)=float
+  return Float2String(x)
+ :?Type(x)="null"
+  return "null"
+ :?Type(x)=int | Type(x)=bool // ["bool","int"].Contains(x)
+  return x+""
+ :
+  //Print("[JSON] Unknown type: "+Type(x))
+  return x+""
+
+func Array2String(arr)
+ var result=[]
+ ?arr.Count()=0
+  return "[]"
+ for a:arr
+  result.Add(Stringify(a))
+ return "["+string.Join(",",result)+"]"
+
+// OS transform floats into strings with dots/commas based in CultureInfo
+func Float2String(x)
+ var i=math.FloorToInt(x)
+ var m=Math.pow(10,string.Size(x+"")-string.Size(i+" "))
+ return i+"."+(x*m-i*m)
+
+
+
+//		PARSE
+
+func Parse(str)
+ ?string.Size(str)=0
+  return ""
+ var arr=string.Break(str,1)
+ ?arr[0]="["
+  return ProcessArray(arr)
+ return GetPrimitive(str)
+
+func ProcessArray(arr)
+ ?arr.Count()=2
+  return []
+ var a=[]
+ var b
+ var length
+ for i=1..arr.Count()-2
+  var v=arr[i]
+  ?v="["
+   length=GetLength(arr,i,true)+1
+   b=arrayExt.Slice(arr,i,length)
+   //Print("array from "+i+" length "+length+": "+string.Join("",b))
+   a.Add(ProcessArray(b))
+   i+=length
+  :
+   length=GetLength(arr,i,false)
+   b=string.Join("",arrayExt.Slice(arr,i,length))
+   //Print("("+string.Join("",arr)+") "+i+" length "+length+": "+b)
+   a.Add(GetPrimitive(b))
+   i+=length
+ return a
+
+func GetLength(arr,from,isArray)
+ //Print("getlength: "+string.Join("",arr)+" (.."+arr[from]+""+arr[from+1]+") from: "+from+" isArray:"+isArray)
+ var inString=false
+ var depth=0
+ var marks=["]",","]
+ ?isArray
+  marks=["]"]
+ for i=from..arr.Count()
+   //Print("step: "+i+" arr[i]: "+arr[i]+" count: "+arr.Count())
+  ?arr[i]="\"" & isArray
+   inString=!inString
+  ?!inString
+   ?arr[i]="["
+    depth++
+   :?arr[i]="]"
+    depth--
+   ?depth<=0 & marks.Contains(arr[i])
+    return i-from
+ return arr.Count()	// imposible to reach this line
+
+func GetPrimitive(r)
+ ?string.IndexOf(r,"\"")>=0
+  return string.Sub(r,1,string.Size(r)-2)
+ :?r=False | r=True
+  return r=True
+ :?r="null"
+  return null
+ :?string.IndexOf(r,".")>=0
+  var x=string.Split(r,".")
+  return int.Parse(x[0])+(int.Parse(x[1])/Math.pow(10,string.Size(x[1])))
+ return int.Parse(r)

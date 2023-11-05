@@ -1,0 +1,41 @@
+
+
+func Slice(arr,from,length)
+ var r
+ r=[]
+ for v=from..(from+length-1)
+  r.Add(arr[v])
+ return r
+
+
+func Pop(arr)
+ var count=arr.Count()
+ ?count=0
+  return null
+ var x=arr[count-1]
+ arr.RemoveAt(count-1)
+ return x
+
+func Shift(arr)
+ ?arr.Count()=0
+  return null
+ var x=arr[0]
+ arr.RemoveAt(0)
+ return x
+
+func Unshift(arr,val)
+ arr.Insert(0,val)
+
+// use [].Contains(val)
+func Contains(arr,val)
+ for x:arr
+  ?val=x
+   return true
+ return false
+
+
+/*
+func Rand(arr)
+func Shuffle(arr)
+*/
+
